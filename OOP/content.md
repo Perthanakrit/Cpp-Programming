@@ -104,3 +104,141 @@ class Book
     int pages;
 };
 ```
+
+or
+
+`explicit` keyword ใช้กับ constructor ที่มี parameter มากกว่า 1 ตัว
+
+```cpp
+class Book
+{
+    public:
+    explicit Book(string t, string a = "No author", int p = 0) {
+        title = t;
+        author = a;
+        pages = p;
+    }
+    string title;
+    string author;
+    int pages;
+};
+```
+
+## Access Modifier
+
+- Data member ควรเป็น **private**
+- Constructor และ member function ส่วนใหญ่เป็น **public**
+
+### Getter and Setter
+
+```cpp
+class Student
+{
+    private:
+        string name;
+        int scores[5];
+
+    public:
+    string GetName() {
+        return name;
+    }
+    void SetName(string n) {
+        name = n;
+    }
+    int GetScore(int i) {
+        return scores[i];
+    }
+    void SetScore(int i, int s) {
+        scores[i] = s;
+    }
+    int GetTotalScore()
+    {
+        int total = 0;
+        int i;
+        for (i = 0; i < 5; i++)
+        {
+            total += scores[i];
+        }
+        return total;
+    }
+};
+```
+
+### Operator Overloading
+
+```cpp
+class Complex
+{
+    double real;
+    double imag;
+
+    public:
+    Complex() {
+        real = 0;
+        imag = 0;
+    }
+    Complex(double r, double i) {
+        real = r;
+        imag = i;
+    }
+    Complex &operator+(Complex &c1) {
+        double w = width + c1.width;
+        double l = length + c1.length;
+
+        Rectangle r3(w, l);
+
+        return r3;
+    }
+
+    friend ostream &operator<<(ostream &out, const Complex &c)
+    {
+        out << c.real << " + " << c.imag << "i";
+        return out;
+
+    }
+
+};
+
+int main()
+{
+    Complex c1(3, 4);
+    Complex c2(2, 3);
+
+    cout << "c1" << c1 << endl;
+
+    //Complex c3;
+    //c3 = c1 + c2;
+    //cout << c3.real << " + " << c3.imag << "i" << endl;
+    return 0;
+}
+
+```
+
+## Object Handles
+
+- Object **name**
+- Object **reference**
+- Object **pointer**
+
+### Object Reference
+
+การประกาศ reference จะใช้ `&` ตามหลัง type
+
+```cpp
+BankAccount account1(1,500);
+BankAccount &accountRef = account1;
+```
+
+จากโค้ด​จะมี 1 object 2 ชื่อ คล้่ายๆ เป็นการ copy ค่าของ object มาให้ชื่อใหม่
+
+### Object Pointer
+
+```cpp
+BankAccount account1(1,500);
+BankAccount *accountPtr = &account1;
+accountPtr->Deposit(100);
+```
+
+## Composition
+
+### การสร้าง object ใหม่จาก class อื่น
