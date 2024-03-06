@@ -1,9 +1,10 @@
 #include <iostream>
 #include "Book.h"
 using namespace std;
+using namespace Book;
 
 // :: is scope resolution operator
-Book::Book() // default constructor
+Book() // default constructor
 {
     title = "";
     totalPage = 0;
