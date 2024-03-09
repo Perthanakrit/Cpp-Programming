@@ -21,6 +21,11 @@ public:
     {
         this->name = name;
     }
+
+    int getAge()
+    {
+        return age;
+    }
 };
 
 class Person

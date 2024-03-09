@@ -49,7 +49,7 @@ int main()
             break;
         }
 
-        input[0] = '\0';
+        // input[0] = '\0';
     }
 
     return 0;
@@ -133,34 +133,33 @@ void print_all_nodes(Node *head)
 void delete_node(Node **head, int number)
 {
     Node *current = *head;
-    Node *prev_node = NULL;
-    Node *next_node = NULL;
+    Node *prevNode = NULL;
 
     while (current != NULL)
     {
-        if (current->number != number)
-            break;
-
-        next_node = current->next;
-
         if (current->number == number)
         {
-            if (current->prev != NULL)
+            // First node
+            if (prevNode == NULL)
             {
-                prev_node = current->prev;
-                prev_node->next = next_node;
+                *head = current->next;
+                free(current);
+                if (*head == NULL)
+                {
+                    return;
+                }
             }
             else
             {
-                *head = next_node;
-                (*head)->prev = NULL;
+                prevNode->next = current->next;
+                free(current);
             }
-
-            free(current);
-
-            current = NULL;
+            current = prevNode->next;
         }
-        return;
-        current = next_node;
+        else
+        {
+            prevNode = current;
+            current = current->next;
+        }
     }
 }

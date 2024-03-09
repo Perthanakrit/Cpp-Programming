@@ -1,33 +1,15 @@
 #include <iostream>
 using namespace std;
 
-typedef struct __pos
+int find()
 {
-    int x;
-    int y;
-} Position;
-
-typedef struct __node
-{
-    Position point;
-    struct __node **nodes;
-} Node;
+}
 
 int main()
 {
-    int n, i;
-    cin >> n;
-    Node *points = (Node *)malloc(sizeof(Node) * n);
+    int twoDArray[6][6] = {{5}, {2, 3}, {1, 4}, {2 6}, {1, 3}, {4, 5}};
 
-    for (i = 0; i < n; i++)
-    {
-        cin >> points[i].point.x >> points[i].point.y;
-    }
+    find
 
-    for (i = 0; i < n; i++)
-    {
-        cout << points[i].point.x << ", " << points[i].point.y << endl;
-    }
-
-    return 0;
+        return 0;
 }

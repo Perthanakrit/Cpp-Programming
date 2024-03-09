@@ -242,3 +242,63 @@ accountPtr->Deposit(100);
 ## Composition
 
 ### การสร้าง object ใหม่จาก class อื่น
+
+## Polymorphism
+
+ใช้เมื่อมี function ที่มีชื่อเหมือนกัน แต่รับ parameter มีการทำงานที่ต่างกัน
+
+#### Virtual
+
+ทำให้ sub class สามารถ override function ของ base class ได้
+**เพื่อเปลี่ยนการทำงาน**
+
+### Pure Virtual
+
+```cpp
+class Shape
+{
+    public:
+    virtual void Draw() = 0;
+};
+```
+
+**เพื่อให้ sub class ทำงานเอง**
+
+#### Implementation
+
+```cpp
+class Circle : public Shape
+{
+    public:
+    void Draw() {
+        cout << "Draw a circle" << endl;
+    }
+};
+
+class Rectangle : public Shape
+{
+    public:
+    void Draw() {
+        cout << "Draw a rectangle" << endl;
+    }
+};
+```
+
+นำไปใช้
+
+```cpp
+int main()
+{
+    Shape *circle = new Circle();
+    Shape *rectangle = new Rectangle();
+
+    circle->Draw();
+    rectangle->Draw();
+    return 0;
+}
+```
+
+การเรียกใช้ function มี 2 ขั้นตอน
+
+1. ตรวจสอบว่า สามารถเรียกใช้ function ได้หรือไม่ โดยดูจาก static type ว่ามี function นี้หรือไม่
+2. ผ่านขั้นที่ 1 เรียกได้ จะตรวจสอบว่า จะเรียก function ของ object ประเภทไหน โดยดูจาก dynamic type จะเรียก function ของ object ประเภทนั้น ตามที่ pointer หรือ reference ชี้ไป
