@@ -3,13 +3,11 @@ using namespace std;
 
 class Car
 {
-private:
-    int power;
 
 public:
-    Car(string name = "Car")
+    Car(string name, int power)
     {
-        power = 100;
+        this->power = power;
     }
 
     void Drive(int d)
@@ -21,12 +19,15 @@ public:
     {
         return power;
     }
+
+private:
+    int power;
 };
 
 int main()
 {
-    Car *c1 = new Car();
-    Car c2("BMW");
+    Car *c1 = new Car("Toyota", 199);
+    Car c2("BMW", 200);
     Car *c3 = c1; //
     Car &c4 = c2; //
 

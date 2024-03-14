@@ -3,7 +3,7 @@ using namespace std;
 
 class Animal
 {
-private:
+protected:
     int happiness;
     int energy;
     int fullness;
@@ -118,6 +118,33 @@ void Animal::sleep(int hour)
     limitStat();
 }
 
+// Bird class
+class Bird : public Animal
+{
+public:
+    Bird(int, int, int);
+    void fly(int);
+    void sing();
+};
+
+Bird::Bird(int happiness, int energy, int fullness) : Animal(happiness, energy, fullness) {}
+
+void Bird::fly(int hour)
+{
+    if (hour < 0)
+    {
+        return;
+    }
+    energy -= (5 * hour);
+    Animal::limitStat();
+}
+
+void Bird::sing()
+{
+    happiness += 5;
+    Animal::limitStat();
+}
+
 void printAllAttiude(Animal animal)
 {
     cout << "Happiness: " << animal.getHappiness() << endl;
@@ -126,9 +153,10 @@ void printAllAttiude(Animal animal)
     cout << "----------------" << endl;
 }
 
-int main()
+int main(int argc, char const *argv[])
 {
     Animal animal(-19, 0, 1500);
+    Bird *bird = new Bird(10, 20, 30);
     printAllAttiude(animal);
 
     animal.eat(150);
@@ -139,4 +167,10 @@ int main()
 
     animal.sleep(3);
     printAllAttiude(animal);
+
+    printf("%s\n", "-----Bird-----");
+
+    bird->fly(2);
+
+    return 0;
 }

@@ -1,5 +1,8 @@
 #include <iostream>
-// #include <cstdlib>
+#include <queue>
+#include <list>
+#include <vector>
+
 using namespace std;
 
 #define MAX 100
@@ -8,20 +11,31 @@ typedef struct __node
 {
     double x;
     double y;
+    list<int> adj;
 } Node;
 
-class Graph
+const int MAX_V = 100; // Maximum number of vertices
+
+class WeightedGraph
 {
 
-public:
-    int V;                   // Number of vertices
-    int adjMatrix[MAX][MAX]; // Matrix to store edges
-    Node *nodes;
+private:
+    double adjMatrix[MAX_V][MAX_V];
+    void printSolution(double dist[], int end)
+    {
+        printf("Vertex \t\t Distance from Source\n");
+        for (int i = 0; i < V; i++)
+            if (i == end)
+                printf("%d \t\t %lf\n", i, dist[i]);
+    }
 
-    Graph(int V)
+public:
+    int V; // Number of vertices
+    // Adjacency matrix to store weights
+
+    WeightedGraph(int V)
     {
         this->V = V;
-        nodes = new Node[V];
         for (int i = 0; i < V; ++i)
         {
             for (int j = 0; j < V; ++j)
@@ -31,86 +45,146 @@ public:
         }
     }
 
-    void addEdge(int u, int v)
+    void addEdge(int u, int v, double weight)
     {
-        adjMatrix[u][v] = 1; // Add edge from u to
-        adjMatrix[v][u] = 1;
+        // Add edge from u to v with specified weight
+        adjMatrix[u][v] = weight;
+        adjMatrix[v][u] = weight; // For undirected graph
     }
 
-    double distance(Node a, Node b)
+    // void findMinDistance(int begin, int end)
+    // {
+    //     vector<bool> visited(this->V, false);
+    //     queue<int> q;
+
+    //     q.push(start);
+    //     visited[start] = true;
+
+    //     int distance = 0; // To keep track of total distance traversed
+    //     int current = 0;  // To keep track of current vertex
+    //     while (!q.empty())
+    //     {
+    //         current = q.front();
+    //         q.pop();
+
+    //         // Check if we reached the end vertex
+    //         if (current == end)
+    //         {
+    //             break; // Minimum distance found, exit loop
+    //         }
+
+    //         // Explore unvisited neighbors
+    //         for (auto neighbor : this->adjMatrix[current])
+    //         {
+    //             double weight = neighbor;
+    //             double next = neighbor;
+    //             if (!visited[next])
+    //             {
+    //                 visited[next] = true;
+    //                 q.push(next);
+    //                 distance += weight; // Update distance
+    //             }
+    //         }
+    //     }
+
+    int minDistance(double dist[], bool sptSet[])
     {
-        return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+        // Initialize min value
+        int min_index;
+        double min = INT_MAX;
+
+        for (int v = 0; v < V; v++)
+            if (sptSet[v] == false && dist[v] <= min)
+                min = dist[v],
+                min_index = v;
+
+        return min_index;
     }
 
-    double findRouteMinDistance(int start, int end)
+    void dijkstra(int src, int end)
     {
-        double minDistance = 0;
-        double distance = 0;
-        int i = start;
-        int j = end;
-        while (i != j)
+        src--;
+        end--;
+        double dist[V]; // The output array.  dist[i] will hold the
+                        // shortest
+        // distance from src to i
+
+        bool sptSet[V]; // sptSet[i] will be true if vertex i is
+                        // included in shortest
+        // path tree or shortest distance from src to i is
+        // finalized
+
+        // Initialize all distances as INFINITE and stpSet[] as
+        // false
+        for (int i = 0; i < V; i++)
+            dist[i] = INT_MAX, sptSet[i] = false;
+
+        // Distance of source vertex from itself is always 0
+        dist[src] = 0;
+
+        // Find shortest path for all vertices
+        for (int count = 0; count < V - 1; count++)
         {
-            distance = this->distance(nodes[i], nodes[j]);
-            minDistance += distance;
-            i = j;
-            j = end;
+            // Pick the minimum distance vertex from the set of
+            // vertices not yet processed. u is always equal to
+            // src in the first iteration.
+            int u = minDistance(dist, sptSet);
+
+            // Mark the picked vertex as processed
+            sptSet[u] = true;
+
+            // Update dist value of the adjacent vertices of the
+            // picked vertex.
+            for (int v = 0; v < V; v++)
+
+                // Update dist[v] only if is not in sptSet,
+                // there is an edge from u to v, and total
+                // weight of path from src to  v through u is
+                // smaller than current value of dist[v]
+                if (!sptSet[v] && this->adjMatrix[u][v] && dist[u] != INT_MAX && dist[u] + this->adjMatrix[u][v] < dist[v])
+                    dist[v] = dist[u] + this->adjMatrix[u][v];
         }
-        return minDistance;
+
+        // print the constructed distance array
+        printSolution(dist, end);
     }
 
-    // Function to print the graph
+    // Function to print the graph (adjacency matrix)
     void printGraph()
     {
-        cout << "    ";
         for (int i = 0; i < V; ++i)
         {
-            cout << i + 1 << " ";
-        }
-        cout << "\n";
-        cout << "    ------" << endl;
-        for (int i = 0; i < V; ++i)
-        {
-            cout << i + 1 << " | ";
             for (int j = 0; j < V; ++j)
             {
-                cout << adjMatrix[i][j] << " ";
+                printf("%0.2f ", adjMatrix[i][j]);
             }
-            cout << "\n";
+            std::cout << "\n";
         }
-    }
-
-private:
-    double routeDistance(int start, int end)
-    {
-        double distance = 0;
-        distance = this->distance(nodes[start], nodes[end]);
-        return distance;
     }
 };
 
-void printNodes(Node *nodes, int n)
+double calculateDistance(double x1, double y1, double x2, double y2)
 {
-    for (int i = 0; i < n; i++)
-    {
-        cout << "Node " << i + 1 << ": (" << nodes[i].x << ", " << nodes[i].y << ")" << endl;
-    }
+    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 }
 
 int main()
 {
-    int n = 0, u, v, i;
+    int n = 0, u, v, i, begin, end;
     char input[100];
     char *arr = NULL;
     double x, y;
+    Node *nodes;
 
     cin >> n >> ws;
-    Graph g(n); // Create a graph with 4 vertices
 
-    for (u = 0; u <= n; u++)
+    WeightedGraph g(n);
+    nodes = new Node[n];
+
+    // Input
+    for (u = 0; u < n; u++)
     {
         cin >> x >> y;
-        g.nodes[u].x = x;
-        g.nodes[u].y = y;
 
         cin.getline(input, 100);
         arr = strtok(input, " ");
@@ -119,15 +193,27 @@ int main()
         while (arr != NULL)
         {
             v = atoi(arr);
-            g.addEdge(u, v - 1);
+            nodes[u].x = x;
+            nodes[u].y = y;
+            nodes[u].adj.push_back(v - 1);
             arr = strtok(NULL, " ");
             i++;
         }
     }
 
+    cin >> begin >> end;
+
+    for (i = 0; i < n; i++)
+    {
+        for (list<int>::iterator it = nodes[i].adj.begin(); it != nodes[i].adj.end(); it++)
+        {
+            g.addEdge(i, *it, calculateDistance(nodes[i].x, nodes[i].y, nodes[*it].x, nodes[*it].y));
+        }
+    }
+
     g.printGraph();
-    puts("");
-    printNodes(g.nodes, n);
+
+    g.dijkstra(begin, end);
 
     return 0;
 }

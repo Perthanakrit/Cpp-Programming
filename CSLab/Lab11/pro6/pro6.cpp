@@ -3,7 +3,7 @@ using namespace std;
 
 class Animal
 {
-private:
+protected:
     int happiness;
     int energy;
     int fullness;
@@ -118,7 +118,65 @@ void Animal::sleep(int hour)
     limitStat();
 }
 
-void printAllAttiude(Animal animal)
+// Brid
+class Bird : public Animal
+{
+public:
+    Bird(int, int, int);
+    void fly(int);
+    void sing();
+};
+
+Bird::Bird(int happiness, int energy, int fullness) : Animal(happiness, energy, fullness) {}
+
+void Bird::fly(int hour)
+{
+    if (hour < 0)
+    {
+        return;
+    }
+    energy -= (5 * hour);
+    Animal::limitStat();
+}
+
+void Bird::sing()
+{
+    happiness += 5;
+    Animal::limitStat();
+}
+
+// Pet class
+class Pet
+{
+protected:
+    string name;
+
+public:
+    Pet(string);
+    string getName();
+    void setName(string);
+};
+
+Pet::Pet(string name)
+{
+    this->name = name;
+}
+
+string Pet::getName() { return name; }
+void Pet::setName(string name) { this->name = name; }
+
+// OwnedBird
+class OwnedBird : public Bird, public Pet
+{
+public:
+    OwnedBird(string, int, int, int);
+};
+
+OwnedBird::OwnedBird(string name, int happiness, int energy, int fullness) : Pet(name), Bird(happiness, energy, fullness)
+{
+}
+
+void printAllAttiude(Bird animal)
 {
     cout << "Happiness: " << animal.getHappiness() << endl;
     cout << "Energy: " << animal.getEnergy() << endl;
@@ -128,15 +186,43 @@ void printAllAttiude(Animal animal)
 
 int main()
 {
-    Animal animal(-19, 0, 1500);
-    printAllAttiude(animal);
+    char action;
+    int hour;
+    int happiness, energy, fullness;
+    cin >> happiness >> energy >> fullness;
+    OwnedBird animal("Dobby", happiness, energy, fullness);
+    while (1)
+    {
+        cin >> action;
+        if (action == 'q')
+            break;
+        cin >> hour;
+        switch (action)
+        {
+        case 'e':
+            animal.eat(hour);
+            break;
+        case 'p':
+            animal.play(hour);
+            break;
+        case 's':
+            animal.sleep(hour);
+            break;
+        case 'f':
+            animal.fly(hour);
+            break;
+        case 'i':
+            for (int i = 0; i < hour; i++)
+                animal.sing();
+            break;
+        case 'n':
+            if (hour < 5)
+                animal.setName("Debby");
+            else
+                animal.setName("Shogun");
+            break;
+        }
+    }
 
-    animal.eat(150);
-    printAllAttiude(animal);
-
-    animal.play(2);
-    printAllAttiude(animal);
-
-    animal.sleep(3);
-    printAllAttiude(animal);
+    cout << animal.getName() << endl;
 }

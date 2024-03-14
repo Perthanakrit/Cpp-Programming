@@ -3,19 +3,30 @@
 
 using namespace std;
 
+void printArr(bool **arr, int n, string str)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+            cout << arr[i][j] << " ";
+        cout << endl;
+    }
+}
+
 int longestPalindrome(string str)
 {
     int n = str.length();
 
-    bool twoArr[n][n]; // twoArr is a 2D array of size n*n
+    bool **twoArr = new bool *[n];
 
-    // All substrings of length 1 are palindromes
     for (int i = 0; i < n; i++)
     {
+        twoArr[i] = new bool[n];
         twoArr[i][i] = true;
     }
 
-    // Find the longest palindrome starting from substrings of length 2
+    printArr(twoArr, n);
+
     int maxLength = 1;
     for (int l = 2; l <= n; l++)
     {
@@ -23,7 +34,6 @@ int longestPalindrome(string str)
         {
             int j = i + l - 1;
 
-            // Check if current substring is a palindrome
             if (str[i] == str[j])
             {
                 if (l == 2)

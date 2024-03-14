@@ -6,6 +6,11 @@ using namespace std;
 class GameCharacter
 {
 public:
+    GameCharacter()
+    {
+        cout << "GameCharacter created" << endl;
+    }
+
     virtual void fight()
     {
         cout << "Fight!" << endl;
@@ -15,6 +20,10 @@ public:
 class Enemy : public GameCharacter
 {
 public:
+    Enemy() : GameCharacter()
+    {
+    }
+
     virtual void fight()
     {
         cout << "Enemy ";
