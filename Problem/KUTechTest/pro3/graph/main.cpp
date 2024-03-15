@@ -20,13 +20,6 @@ class WeightedGraph
 private:
     double adjMatrix[MAX_V][MAX_V];
 
-    void printSolution(double dist[], int end)
-    {
-        for (int i = 0; i < V; i++)
-            if (i == end)
-                printf("%lf\n", dist[i]);
-    }
-
 public:
     int V;
 
@@ -62,6 +55,7 @@ public:
         return min_index;
     }
 
+    // -- Souce: https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/
     void dijkstra(int src, int end)
     {
         src--;
@@ -87,9 +81,8 @@ public:
                 if (!sptSet[v] && this->adjMatrix[u][v] && dist[u] != INT_MAX && dist[u] + this->adjMatrix[u][v] < dist[v])
                     dist[v] = dist[u] + this->adjMatrix[u][v];
         }
-
-        this->printSolution(dist, end);
     }
+    // --
 };
 
 double calculateDistance(double x1, double y1, double x2, double y2)
